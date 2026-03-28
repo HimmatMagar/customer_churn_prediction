@@ -9,3 +9,11 @@ python-box
 dvc
 mlflow
 dagshub
+notebook
+xgboost
+lightgbm
+catboost
+imbalanced-learn
+python-dotenv
+
+-e .

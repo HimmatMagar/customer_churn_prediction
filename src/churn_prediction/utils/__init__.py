@@ -24,12 +24,12 @@ def read_yaml_file(filePath: Path) -> ConfigBox:
 
 
 @ensure_annotations
-def create_dir(file_dir: list, verbose = True) -> None:
+def create_dir(file_dir: list, verbose=True):
       for filename in file_dir:
             os.makedirs(filename, exist_ok=True)
 
-      if verbose:
-            logger.info("File directory created successfully")
+            if verbose:
+                  logger.info("File directory created successfully")
 
 
 

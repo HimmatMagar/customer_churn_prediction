@@ -1,0 +1,8 @@
+dir: artifact
+
+data_ingestion:
+  root_dir: artifact/data_ingestion
+  source_url: "https://github.com/HimmatMagar/datae/raw/refs/heads/main/WA_Fn-UseC_-Telco-Customer-Churn.zip"
+  zip_file: artifact/data_ingestion/data.zip
+  unzip_file: artifact/data_ingestion
+

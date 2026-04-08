@@ -45,7 +45,7 @@ def save_json(filePath: Path, data:dict) -> None:
 
 
 @ensure_annotations
-def save_pkl_file(filePath: Path, data:Any) -> None:
+def save_pkl_file(filePath: Path, data:object):
       try:
             with open(filePath, "wb") as f:
                   pickle.dump(data, f)

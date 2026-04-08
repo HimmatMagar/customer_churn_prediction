@@ -11,7 +11,6 @@ class ConfigManager:
             create_dir([self.config.dir])
 
 
-      
       def getDataIngestionConfig(self) -> DataIngestionConfig:
             config = self.config.data_ingestion
             create_dir([config.root_dir])
@@ -24,3 +23,14 @@ class ConfigManager:
             )
             return data_ingestion
 
+
+      def getDataTransformationConfig(self) -> DataTransformationConfig:
+            config = self.config.data_transformation
+            create_dir([config.root_dir])
+
+            data_transform = DataTransformationConfig(
+                  root_dir = config.root_dir,
+                  data_source = config.data_source
+            )
+
+            return data_transform

@@ -14,3 +14,14 @@ class DataIngestionConfig:
 class DataTransformationConfig:
       root_dir: Path
       data_source: Path
+
+
+@dataclass(frozen=True)
+class ModelBuildingConfig:
+      root_dir: Path
+      xTrain_data: Path
+      yTrain_data: Path
+      model_path: str
+      C: int
+      gamma: str
+      kernel: str

@@ -10,3 +10,10 @@ data_ingestion:
 data_transformation:
   root_dir: artifact/data_transformation
   data_source: artifact/data_ingestion/WA_Fn-UseC_-Telco-Customer-Churn.csv
+
+
+model_building:
+  root_dir: artifact/model_building
+  xTrain_data: artifact/data_transformation/xTrain.pkl
+  yTrain_data: artifact/data_transformation/yTrain.pkl
+  model_path: model.pkl

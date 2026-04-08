@@ -1,1 +1,4 @@
-key: value
+params: 
+  C: 10
+  gamma: 'scale'
+  kernel: 'rbf'

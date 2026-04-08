@@ -55,7 +55,7 @@ def save_pkl_file(filePath: Path, data:object):
 
 
 @ensure_annotations
-def load_pkl_file(filePath: Path) -> Any:
+def load_pkl_file(filePath: Path):
       try:
             with open(filePath, "rb") as f:
                   data = pickle.load(f)

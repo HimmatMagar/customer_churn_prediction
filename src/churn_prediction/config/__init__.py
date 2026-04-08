@@ -52,3 +52,17 @@ class ConfigManager:
             )
 
             return model_config
+
+      def getModelEvalConfig(self) -> ModelEvaluationConfig:
+            config = self.config.model_evaluation
+            create_dir([config.root_dir])
+
+            model_eval_config = ModelEvaluationConfig(
+                  root_dir = config.root_dir,
+                  xTest_data = config.xTest_data,
+                  yTest_data = config.yTest_data,
+                  model_path = config.model,
+                  metric = config.metric
+            )
+
+            return model_eval_config

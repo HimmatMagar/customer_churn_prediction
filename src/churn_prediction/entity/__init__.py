@@ -25,3 +25,12 @@ class ModelBuildingConfig:
       C: int
       gamma: str
       kernel: str
+
+
+@dataclass(frozen=True)
+class ModelEvaluationConfig:
+      root_dir: Path
+      xTest_data: Path
+      yTest_data: Path
+      model_path: Path
+      metric: Path

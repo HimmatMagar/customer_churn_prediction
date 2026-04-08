@@ -17,3 +17,11 @@ model_building:
   xTrain_data: artifact/data_transformation/xTrain.pkl
   yTrain_data: artifact/data_transformation/yTrain.pkl
   model_path: model.pkl
+
+
+model_evaluation:
+  root_dir: artifact/model_evaluation
+  xTest_data: artifact/data_transformation/xTest.pkl
+  yTest_data: artifact/data_transformation/yTest.pkl
+  model: artifact/model_building/model.pkl
+  metric: artifact/model_evaluation/metric.json

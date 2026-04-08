@@ -34,7 +34,7 @@ def create_dir(file_dir: list, verbose=True):
 
 
 @ensure_annotations
-def save_json(filePath: Path, data:dict) -> None:
+def save_json(filePath: Path, data:dict):
       try:
             with open(filePath, "w") as f:
                   json.dump(data, f)

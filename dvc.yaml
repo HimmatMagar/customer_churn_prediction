@@ -1,0 +1,53 @@
+stages:
+  data_ingestion:
+    cmd: python src/churn_prediction/pipeline/data_ingestion_pipeline.py
+    deps:
+      - src/churn_prediction/components/data_ingestion.py
+      - config/config.yaml
+    outs:
+      - artifact/data_ingestion/WA_Fn-UseC_-Telco-Customer-Churn.csv
+
+
+  data_transformation:
+    cmd: python src/churn_prediction/pipeline/data_transform_pipeline.py
+    deps: 
+      - src/churn_prediction/components/data_transform.py
+      - artifact/data_ingestion/WA_Fn-UseC_-Telco-Customer-Churn.csv
+      - config/config.yaml
+    outs:
+      - artifact/data_transformation/xTrain.pkl
+      - artifact/data_transformation/xTest.pkl
+      - artifact/data_transformation/yTrain.pkl
+      - artifact/data_transformation/yTest.pkl
+      - artifact/data_transformation/pipeline.pkl
+  
+
+  model_building:
+    cmd: python src/churn_prediction/pipeline/model_pipeline.py
+    deps:
+      - src/churn_prediction/components/model.py
+      - artifact/data_transformation/xTrain.pkl
+      - artifact/data_transformation/yTrain.pkl
+      - config/config.yaml
+    params:
+      - params.yaml:
+          - params.C
+          - params.kernel
+          - params.gamma
+    outs:
+      - artifact/model_building/model.pkl
+      - artifact/run_id.txt
+      - artifact/model_id.txt
+  
+
+  model_evaluation:
+    cmd: python src/churn_prediction/pipeline/model_eval_pipeline.py
+    deps:
+      - src/churn_prediction/components/model_eval.py
+      - artifact/data_transformation/xTest.pkl
+      - artifact/data_transformation/yTest.pkl
+      - artifact/model_building/model.pkl
+      - config/config.yaml
+    metrics:
+      - artifact/model_evaluation/mertic.json:
+          cache: false

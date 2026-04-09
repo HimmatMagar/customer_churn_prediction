@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+      <title>Telco AI Churn Predictor | FastAPI Integration</title>
+      <!-- Google Fonts & modern CSS -->
+      <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+            rel="stylesheet">
+      <style>
+            * {
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+            }
+
+            body {
+                  background: linear-gradient(135deg, #f0f4fc 0%, #e2eaf5 100%);
+                  font-family: 'Inter', sans-serif;
+                  padding: 2rem 1.5rem;
+                  min-height: 100vh;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+            }
+
+            .dashboard-container {
+                  max-width: 1400px;
+                  width: 100%;
+                  margin: 0 auto;
+            }
+
+            .hero {
+                  text-align: center;
+                  margin-bottom: 2rem;
+            }
+
+            .hero h1 {
+                  font-size: 2.5rem;
+                  font-weight: 700;
+                  background: linear-gradient(135deg, #1A2C3E, #2C4C6E);
+                  background-clip: text;
+                  -webkit-background-clip: text;
+                  color: transparent;
+                  letter-spacing: -0.02em;
+            }
+
+            .hero p {
+                  color: #2c3e50;
+                  font-weight: 500;
+                  margin-top: 0.5rem;
+                  opacity: 0.8;
+            }
+
+            .api-badge {
+                  display: inline-block;
+                  background: #1f639020;
+                  border-radius: 2rem;
+                  padding: 0.25rem 1rem;
+                  font-size: 0.75rem;
+                  font-weight: 600;
+                  color: #1f6390;
+                  margin-top: 0.5rem;
+            }
+
+            .prediction-grid {
+                  display: grid;
+                  grid-template-columns: 1fr 0.9fr;
+                  gap: 2rem;
+            }
+
+            .card {
+                  background: rgba(255, 255, 255, 0.92);
+                  backdrop-filter: blur(8px);
+                  border-radius: 2rem;
+                  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+                  border: 1px solid rgba(255, 255, 255, 0.6);
+                  transition: transform 0.2s ease;
+                  overflow: hidden;
+                  padding: 1.8rem 2rem;
+            }
+
+            .card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.18);
+            }
+
+            .card-header {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.75rem;
+                  margin-bottom: 1.8rem;
+                  border-bottom: 2px solid rgba(72, 120, 184, 0.2);
+                  padding-bottom: 0.75rem;
+            }
+
+            .card-header h2 {
+                  font-size: 1.5rem;
+                  font-weight: 600;
+                  color: #1e2f3e;
+            }
+
+            .icon-badge {
+                  background: #2c6e9e20;
+                  padding: 8px;
+                  border-radius: 1rem;
+            }
+
+            .form-row {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 1.2rem;
+                  margin-bottom: 1.5rem;
+            }
+
+            .input-group {
+                  flex: 1 1 calc(50% - 1.2rem);
+                  min-width: 180px;
+            }
+
+            label {
+                  display: block;
+                  font-weight: 600;
+                  font-size: 0.75rem;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  color: #1f4e6e;
+                  margin-bottom: 0.4rem;
+            }
+
+            input,
+            select {
+                  width: 100%;
+                  padding: 0.85rem 1rem;
+                  font-size: 0.95rem;
+                  background: white;
+                  border: 1px solid #cbdde9;
+                  border-radius: 1.2rem;
+                  transition: all 0.2s;
+                  font-weight: 500;
+                  color: #1a2c3e;
+            }
+
+            input:focus,
+            select:focus {
+                  outline: none;
+                  border-color: #2c7cb6;
+                  box-shadow: 0 0 0 3px rgba(44, 124, 182, 0.2);
+            }
+
+            .input-hint {
+                  font-size: 0.7rem;
+                  color: #5c7f9c;
+                  margin-top: 0.3rem;
+            }
+
+            button {
+                  background: linear-gradient(100deg, #1f6390, #2c7eb0);
+                  border: none;
+                  width: 100%;
+                  padding: 1rem;
+                  font-weight: 700;
+                  font-size: 1rem;
+                  border-radius: 2rem;
+                  color: white;
+                  cursor: pointer;
+                  transition: all 0.2s;
+                  margin-top: 0.8rem;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 8px;
+            }
+
+            button:hover {
+                  background: linear-gradient(100deg, #15567c, #236b96);
+                  transform: scale(0.98);
+            }
+
+            button:disabled {
+                  opacity: 0.6;
+                  cursor: not-allowed;
+                  transform: none;
+            }
+
+            .result-card {
+                  background: rgba(255, 255, 255, 0.94);
+            }
+
+            .churn-meter {
+                  background: #f0f5fa;
+                  border-radius: 1.5rem;
+                  padding: 1rem;
+                  margin: 1.5rem 0;
+                  text-align: center;
+            }
+
+            .risk-gauge {
+                  width: 140px;
+                  height: 140px;
+                  margin: 0 auto 1rem auto;
+            }
+
+            .risk-label {
+                  font-weight: 700;
+                  font-size: 1rem;
+                  text-transform: uppercase;
+            }
+
+            .detail-list {
+                  margin-top: 1.5rem;
+            }
+
+            .detail-item {
+                  display: flex;
+                  justify-content: space-between;
+                  padding: 0.7rem 0;
+                  border-bottom: 1px solid #e2edf5;
+                  font-size: 0.9rem;
+            }
+
+            .detail-label {
+                  font-weight: 600;
+                  color: #2c5a7a;
+            }
+
+            .recommendation {
+                  margin-top: 1.5rem;
+                  padding: 1rem;
+                  background: #eef6fc;
+                  border-radius: 1.2rem;
+                  font-size: 0.9rem;
+                  border-left: 4px solid #2c7cb6;
+            }
+
+            .loading-spinner {
+                  display: inline-block;
+                  width: 18px;
+                  height: 18px;
+                  border: 2px solid rgba(255, 255, 255, 0.3);
+                  border-radius: 50%;
+                  border-top-color: white;
+                  animation: spin 0.6s linear infinite;
+            }
+
+            @keyframes spin {
+                  to {
+                        transform: rotate(360deg);
+                  }
+            }
+
+            .error-badge {
+                  background: #fee2e2;
+                  color: #b91c1c;
+                  padding: 0.5rem;
+                  border-radius: 1rem;
+                  font-size: 0.8rem;
+                  margin-top: 1rem;
+                  text-align: center;
+            }
+
+            footer {
+                  text-align: center;
+                  margin-top: 2rem;
+                  font-size: 0.75rem;
+                  color: #4b6f8c;
+            }
+
+            @media (max-width: 850px) {
+                  .prediction-grid {
+                        grid-template-columns: 1fr;
+                  }
+
+                  body {
+                        padding: 1rem;
+                  }
+            }
+      </style>
+</head>
+
+<body>
+      <div class="dashboard-container">
+            <div class="hero">
+                  <h1>📡 Telco Churn Intelligence</h1>
+                  <p>AI-powered prediction · FastAPI backend · Real-time risk scoring</p>
+                  <div class="api-badge">🔌 Connected to FastAPI /predict endpoint</div>
+            </div>
+
+            <div class="prediction-grid">
+                  <!-- INPUT FORM -->
+                  <div class="card">
+                        <div class="card-header">
+                              <div class="icon-badge">📋</div>
+                              <h2>Customer Profile</h2>
+                        </div>
+                        <form id="churnForm">
+                              <div class="form-row">
+                                    <div class="input-group">
+                                          <label>📆 Tenure (months)</label>
+                                          <input type="number" id="tenure" value="18" min="0" max="72" step="1">
+                                          <div class="input-hint">0–72 months</div>
+                                    </div>
+                                    <div class="input-group">
+                                          <label>💰 Monthly Charges ($)</label>
+                                          <input type="number" id="monthlyCharges" step="0.01" value="65.5" min="18"
+                                                max="150">
+                                    </div>
+                              </div>
+
+                              <div class="form-row">
+                                    <div class="input-group">
+                                          <label>💳 Total Charges ($)</label>
+                                          <input type="number" id="totalCharges" step="0.01" value="850.25" min="0"
+                                                max="9000">
+                                    </div>
+                                    <div class="input-group">
+                                          <label>🛜 Internet Service</label>
+                                          <select id="internetService">
+                                                <option value="Fiber optic">Fiber optic</option>
+                                                <option value="DSL">DSL</option>
+                                                <option value="No">No internet service</option>
+                                          </select>
+                                    </div>
+                              </div>
+
+                              <div class="form-row">
+                                    <div class="input-group">
+                                          <label>🛡️ TechSupport</label>
+                                          <select id="techSupport">
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                                <option value="No internet service">No internet service</option>
+                                          </select>
+                                    </div>
+                                    <div class="input-group">
+                                          <label>🔐 OnlineSecurity</label>
+                                          <select id="onlineSecurity">
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                                <option value="No internet service">No internet service</option>
+                                          </select>
+                                    </div>
+                              </div>
+
+                              <div class="form-row">
+                                    <div class="input-group">
+                                          <label>📄 Contract Type</label>
+                                          <select id="contract">
+                                                <option value="Month-to-month">Month-to-month</option>
+                                                <option value="One year">One year</option>
+                                                <option value="Two year">Two year</option>
+                                          </select>
+                                    </div>
+                                    <div class="input-group">
+                                          <label>💑 Partner</label>
+                                          <select id="partner">
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                          </select>
+                                    </div>
+                              </div>
+
+                              <button type="button" id="predictBtn">
+                                    <span>✨ Predict with API</span>
+                              </button>
+                        </form>
+                        <div id="apiStatus"
+                              style="margin-top: 0.8rem; font-size: 0.7rem; text-align: center; color: #4b6f8c;"></div>
+                  </div>
+
+                  <!-- RESULT CARD -->
+                  <div class="card result-card">
+                        <div class="card-header">
+                              <div class="icon-badge">📊</div>
+                              <h2>Churn Risk Analysis</h2>
+                        </div>
+                        <div id="resultArea">
+                              <div class="churn-meter" id="gaugeContainer">
+                                    <div class="risk-gauge">
+                                          <svg viewBox="0 0 100 100" style="width: 100%; height: auto;">
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e2edf2"
+                                                      stroke-width="10" />
+                                                <circle id="riskArc" cx="50" cy="50" r="45" fill="none" stroke="#94a3b8"
+                                                      stroke-width="10" stroke-linecap="round" stroke-dasharray="283"
+                                                      stroke-dashoffset="283" transform="rotate(-90 50 50)" />
+                                                <text x="50" y="55" text-anchor="middle" font-size="20"
+                                                      font-weight="bold" fill="#1f3a4b" id="riskPercent">--%</text>
+                                                <text x="50" y="72" text-anchor="middle" font-size="8"
+                                                      fill="#5f7f9a">Churn Prob.</text>
+                                          </svg>
+                                    </div>
+                                    <div class="risk-label" id="riskLabelText">Awaiting prediction</div>
+                              </div>
+
+                              <div class="detail-list" id="insightList">
+                                    <div class="detail-item"><span class="detail-label">📌 Key
+                                                drivers</span><span>—</span></div>
+                                    <div class="detail-item"><span class="detail-label">🎯
+                                                Recommendation</span><span>—</span></div>
+                              </div>
+                              <div class="recommendation" id="actionMessage">
+                                    ⚡ Click "Predict with API" to get AI-powered churn risk from FastAPI backend.
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            <footer>
+                  ⚡ FastAPI endpoint: POST /predict · Expects JSON with telco features · Returns churn_probability &
+                  insights
+            </footer>
+      </div>
+
+      <script>
+            // DOM elements
+            const tenureInput = document.getElementById('tenure');
+            const monthlyInput = document.getElementById('monthlyCharges');
+            const totalInput = document.getElementById('totalCharges');
+            const internetSelect = document.getElementById('internetService');
+            const techSupportSelect = document.getElementById('techSupport');
+            const onlineSecuritySelect = document.getElementById('onlineSecurity');
+            const contractSelect = document.getElementById('contract');
+            const partnerSelect = document.getElementById('partner');
+            const predictBtn = document.getElementById('predictBtn');
+            const apiStatusDiv = document.getElementById('apiStatus');
+
+            // result elements
+            const riskArc = document.getElementById('riskArc');
+            const riskPercentSpan = document.getElementById('riskPercent');
+            const riskLabelTextSpan = document.getElementById('riskLabelText');
+            const insightListDiv = document.getElementById('insightList');
+            const actionMsgDiv = document.getElementById('actionMessage');
+
+            // ========== API CONFIGURATION ==========
+            // 🔁 REPLACE THIS URL WITH YOUR FASTAPI ENDPOINT
+            // Example: "https://your-fastapi-app.onrender.com/predict" or "http://127.0.0.1:8000/predict"
+            const API_URL = "http://127.0.0.1:8000/predict";   // <-- UPDATE with your deployed FastAPI URL
+
+            // Helper: build request payload matching expected columns
+            function buildPayload() {
+                  return {
+                        tenure: parseFloat(tenureInput.value) || 0,
+                        MonthlyCharges: parseFloat(monthlyInput.value) || 0,
+                        TotalCharges: parseFloat(totalInput.value) || 0,
+                        TechSupport: techSupportSelect.value,
+                        Contract: contractSelect.value,
+                        Partner: partnerSelect.value,
+                        OnlineSecurity: onlineSecuritySelect.value,
+                        InternetService: internetSelect.value
+                  };
+            }
+
+            // Validate and sanitize inputs before sending
+            function sanitizeInputs() {
+                  let tenure = parseFloat(tenureInput.value);
+                  let monthly = parseFloat(monthlyInput.value);
+                  let total = parseFloat(totalInput.value);
+
+                  tenure = isNaN(tenure) ? 12 : Math.min(72, Math.max(0, tenure));
+                  monthly = isNaN(monthly) ? 55 : Math.min(150, Math.max(18, monthly));
+                  total = isNaN(total) ? 0 : Math.min(9000, Math.max(0, total));
+
+                  tenureInput.value = tenure;
+                  monthlyInput.value = monthly.toFixed(2);
+                  totalInput.value = total.toFixed(2);
+            }
+
+            // Display loading state
+            function setLoading(isLoading) {
+                  if (isLoading) {
+                        predictBtn.disabled = true;
+                        predictBtn.innerHTML = `<span class="loading-spinner"></span> Contacting API...`;
+                        apiStatusDiv.innerHTML = "⏳ Sending request to FastAPI...";
+                        actionMsgDiv.innerHTML = "⏳ Computing churn risk with AI model...";
+                  } else {
+                        predictBtn.disabled = false;
+                        predictBtn.innerHTML = `<span>✨ Predict with API</span>`;
+                  }
+            }
+
+            // Update UI with API response
+            function updateUIWithResponse(data) {
+                  // Expected response format:
+                  // { churn_probability: 0.42, risk_level: "Moderate", drivers: [...], recommendation: "...", status: "success" }
+                  // Fallback for different naming
+                  let probability = 0;
+                  if (data.churn_probability !== undefined) probability = data.churn_probability;
+                  else if (data.probability !== undefined) probability = data.probability;
+                  else if (data.churn_percentage !== undefined) probability = data.churn_percentage / 100;
+                  else if (data.risk_score !== undefined) probability = data.risk_score / 100;
+                  else probability = 0.5;
+
+                  // Ensure it's between 0 and 1, then convert to percentage
+                  let probPercent = Math.min(0.98, Math.max(0.02, probability)) * 100;
+                  probPercent = Math.round(probPercent);
+
+                  // Risk level & attributes
+                  let riskLevel = data.risk_level || getRiskLevelFromPercent(probPercent);
+                  let drivers = data.drivers || data.key_drivers || ["No driver info from API"];
+                  let recommendation = data.recommendation || data.action || "Personalized retention strategy recommended.";
+
+                  // Determine color and icon based on risk level or percentage
+                  const riskAttr = getRiskAttributes(probPercent, riskLevel);
+
+                  // Animate gauge
+                  const circumference = 2 * Math.PI * 45; // ~282.743
+                  const offset = circumference - (probPercent / 100) * circumference;
+                  riskArc.style.strokeDasharray = `${circumference}`;
+                  riskArc.style.strokeDashoffset = offset;
+                  riskArc.style.stroke = riskAttr.color;
+                  riskPercentSpan.innerText = `${probPercent}%`;
+                  riskLabelTextSpan.innerHTML = `${riskAttr.icon} ${riskAttr.level} Churn Risk`;
+                  riskLabelTextSpan.style.color = riskAttr.color;
+
+                  // Build insights list
+                  let driversList = Array.isArray(drivers) ? drivers : [drivers];
+                  let driversHtml = `<div class="detail-item"><span class="detail-label">📌 Key drivers</span><span>${driversList[0] || '—'}</span></div>`;
+                  if (driversList[1]) {
+                        driversHtml += `<div class="detail-item"><span class="detail-label">🔎 Secondary factor</span><span>${driversList[1]}</span></div>`;
+                  } else {
+                        driversHtml += `<div class="detail-item"><span class="detail-label">🔎 Secondary factor</span><span>Based on AI analysis</span></div>`;
+                  }
+                  driversHtml += `<div class="detail-item"><span class="detail-label">🎯 Recommendation</span><span>${recommendation.substring(0, 85)}${recommendation.length > 85 ? '…' : ''}</span></div>`;
+                  insightListDiv.innerHTML = driversHtml;
+
+                  // Detailed message
+                  actionMsgDiv.innerHTML = `
+            <strong>📢 ${riskAttr.icon} ${riskAttr.level} risk profile:</strong> ${riskAttr.message}<br>
+            <small style="display:block; margin-top:8px;">🤖 API Insight: ${recommendation}</small>
+        `;
+
+                  apiStatusDiv.innerHTML = "✅ Prediction received from FastAPI";
+                  setTimeout(() => {
+                        if (apiStatusDiv.innerHTML === "✅ Prediction received from FastAPI") {
+                              apiStatusDiv.innerHTML = "";
+                        }
+                  }, 3000);
+            }
+
+            function getRiskLevelFromPercent(percent) {
+                  if (percent <= 20) return "Very Low";
+                  if (percent <= 40) return "Low";
+                  if (percent <= 60) return "Moderate";
+                  if (percent <= 80) return "High";
+                  return "Critical";
+            }
+
+            function getRiskAttributes(percent, level) {
+                  if (level === "Very Low" || percent <= 20) return { level: 'Very Low', color: '#10b981', icon: '🟢', message: 'Excellent retention! Keep offering great service.' };
+                  if (level === "Low" || percent <= 40) return { level: 'Low', color: '#34d399', icon: '✅', message: 'Stable customer. Consider loyalty programs.' };
+                  if (level === "Moderate" || percent <= 60) return { level: 'Moderate', color: '#fbbf24', icon: '⚠️', message: 'Potential churn signals. Offer discounts or support.' };
+                  if (level === "High" || percent <= 80) return { level: 'High', color: '#f97316', icon: '🔥', message: 'High risk! Proactive retention: contract upgrade, security features.' };
+                  return { level: 'Critical', color: '#ef4444', icon: '❗', message: 'Urgent! Engage retention team immediately.' };
+            }
+
+            // Show error in UI
+            function showError(errorMsg) {
+                  riskArc.style.stroke = "#94a3b8";
+                  riskPercentSpan.innerText = "ERR";
+                  riskLabelTextSpan.innerHTML = "⚠️ API Error";
+                  riskLabelTextSpan.style.color = "#b91c1c";
+                  insightListDiv.innerHTML = `<div class="detail-item"><span class="detail-label">❌ Error</span><span>${errorMsg}</span></div>`;
+                  actionMsgDiv.innerHTML = `⚠️ Failed to reach FastAPI. Make sure server is running at ${API_URL}<br><small>${errorMsg}</small>`;
+                  apiStatusDiv.innerHTML = `❌ API error: ${errorMsg.substring(0, 100)}`;
+                  setTimeout(() => {
+                        if (apiStatusDiv.innerHTML.includes("API error")) {
+                              apiStatusDiv.innerHTML = "💡 Tip: Update API_URL in script to your FastAPI endpoint";
+                        }
+                  }, 5000);
+            }
+
+            // Main predict function: call FastAPI
+            async function callPredictionAPI() {
+                  // Sanitize inputs before sending
+                  sanitizeInputs();
+
+                  const payload = buildPayload();
+                  console.log("Sending to FastAPI:", payload);
+
+                  setLoading(true);
+
+                  try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 sec timeout
+
+                        const response = await fetch(API_URL, {
+                              method: 'POST',
+                              headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                              },
+                              body: JSON.stringify(payload),
+                              signal: controller.signal
+                        });
+
+                        clearTimeout(timeoutId);
+
+                        if (!response.ok) {
+                              let errorText = `HTTP ${response.status}`;
+                              try {
+                                    const errorData = await response.json();
+                                    errorText = errorData.detail || errorData.message || errorText;
+                              } catch (e) { /* ignore */ }
+                              throw new Error(`API Error (${response.status}): ${errorText}`);
+                        }
+
+                        const data = await response.json();
+                        console.log("API Response:", data);
+
+                        if (data.status === "error" || data.error) {
+                              throw new Error(data.message || data.error || "Unknown API error");
+                        }
+
+                        updateUIWithResponse(data);
+
+                  } catch (error) {
+                        console.error("Prediction API call failed:", error);
+                        let friendlyMsg = "";
+                        if (error.name === "AbortError") {
+                              friendlyMsg = "Request timeout. FastAPI server not responding.";
+                        } else if (error.message.includes("Failed to fetch") || error.message.includes("NetworkError")) {
+                              friendlyMsg = `Cannot connect to ${API_URL}. Is FastAPI running? CORS enabled?`;
+                        } else {
+                              friendlyMsg = error.message;
+                        }
+                        showError(friendlyMsg);
+                  } finally {
+                        setLoading(false);
+                  }
+            }
+
+            // Optional: simulate fallback if API is not available (for demo / development)
+            // This is only used when user manually wants to test without backend, but we prioritize API call.
+            // However, to show something meaningful while developing, we add a demo toggle but not auto fallback.
+
+            // Attach event listeners
+            function attachEvents() {
+                  predictBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        callPredictionAPI();
+                  });
+
+                  // Optional: auto-save but no auto-predict to avoid too many API calls
+                  // Add enter key support
+                  const formInputs = [tenureInput, monthlyInput, totalInput, internetSelect, techSupportSelect, onlineSecuritySelect, contractSelect, partnerSelect];
+                  formInputs.forEach(input => {
+                        input.addEventListener('keypress', (e) => {
+                              if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    callPredictionAPI();
+                              }
+                        });
+                  });
+            }
+
+            // Display API endpoint hint on load
+            function init() {
+                  attachEvents();
+                  apiStatusDiv.innerHTML = `🔗 API target: ${API_URL}`;
+                  // Initial UI state
+                  riskArc.style.stroke = "#cbd5e1";
+                  riskPercentSpan.innerText = "--%";
+                  riskLabelTextSpan.innerHTML = "⚡ Ready";
+            }
+
+            init();
+      </script>
+
+      <!-- 
+    ========== FASTAPI BACKEND EXPECTED SCHEMA ==========
+    
+    Your FastAPI endpoint should accept POST request with JSON body:
+    {
+        "tenure": float,
+        "MonthlyCharges": float,
+        "TotalCharges": float,
+        "TechSupport": "Yes" | "No" | "No internet service",
+        "Contract": "Month-to-month" | "One year" | "Two year",
+        "Partner": "Yes" | "No",
+        "OnlineSecurity": "Yes" | "No" | "No internet service",
+        "InternetService": "Fiber optic" | "DSL" | "No"
+    }
+    
+    Expected response example:
+    {
+        "churn_probability": 0.43,
+        "risk_level": "Moderate",
+        "drivers": ["Month-to-month contract", "No tech support"],
+        "recommendation": "Offer contract discount and tech support trial",
+        "status": "success"
+    }
+    
+    CORS must be enabled on FastAPI (from fastapi.middleware.cors import CORSMiddleware)
+    
+    To test locally, run:
+    uvicorn main:app --reload --port 8000
+-->
+</body>
+
+</html>

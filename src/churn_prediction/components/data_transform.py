@@ -33,8 +33,6 @@ class DataTransformation:
             categorical_features = ['TechSupport', 'Contract', 'Partner', 'OnlineSecurity', 'InternetService']
             X = df[numeric_features + categorical_features]
 
-            print(X.head())
-
             y_raw = df['Churn']
             target_encoder = LabelEncoder()
             y = target_encoder.fit_transform(y_raw)

@@ -20,7 +20,8 @@ class ModelBuilding:
                   C=self.config.C,
                   gamma=self.config.gamma,
                   kernel=self.config.kernel,
-                  class_weight="balanced"
+                  class_weight="balanced",
+                  probability=True
             )
 
             svc_model.fit(xTrain, yTrain)

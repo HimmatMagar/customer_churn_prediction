@@ -29,8 +29,8 @@ stages:
       size: 870
     - path: src/churn_prediction/components/data_transform.py
       hash: md5
-      md5: 1b05a9dafe137dcb777ee459cb60a91b
-      size: 3083
+      md5: d641e0eda58b3920d9e72dba3bb87e1c
+      size: 3050
     outs:
     - path: artifact/data_transformation/pipeline.pkl
       hash: md5
@@ -69,8 +69,8 @@ stages:
       size: 870
     - path: src/churn_prediction/components/model.py
       hash: md5
-      md5: 50365ab72b1c65ad01eba8b150a19113
-      size: 1063
+      md5: 53b8edc07d542d2da055ccbacbce7a9e
+      size: 1100
     params:
       params.yaml:
         params.C: 10
@@ -79,13 +79,13 @@ stages:
     outs:
     - path: artifact/model_building/model.pkl
       hash: md5
-      md5: 5ba04ad0f9a0f9ffd976a80e006eab9d
-      size: 422358
+      md5: 95ba0344ae65453cc96ff8e61a491049
+      size: 422375
     - path: artifact/model_id.txt
       hash: md5
-      md5: d897136da559b4cca0b4fb1061423699
+      md5: 5116b3d0af2818bd552a9f2758013020
       size: 32
     - path: artifact/run_id.txt
       hash: md5
-      md5: d897136da559b4cca0b4fb1061423699
+      md5: 5116b3d0af2818bd552a9f2758013020
       size: 32

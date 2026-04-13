@@ -35,7 +35,6 @@ class PredictionPipeline:
             try:
                   x = self.pipeline.transform(data)
                   prediction = self.model.predict_proba(x)
-
                   return prediction
 
             except Exception:

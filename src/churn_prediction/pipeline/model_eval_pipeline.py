@@ -15,7 +15,7 @@ class ModelEvalPipeline():
             config = ConfigManager()
             eval_config = config.getModelEvalConfig()
 
-            configure_mlflow(experiment_name="churn-prediction-model")
+            configure_mlflow(experiment_name="Churn-SVC")
 
             run_id = load_run_id()
             try:

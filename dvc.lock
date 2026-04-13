@@ -79,13 +79,13 @@ stages:
     outs:
     - path: artifact/model_building/model.pkl
       hash: md5
-      md5: 95ba0344ae65453cc96ff8e61a491049
+      md5: f13e0c085f80a417abfd52350831f685
       size: 422375
     - path: artifact/model_id.txt
       hash: md5
-      md5: 5116b3d0af2818bd552a9f2758013020
+      md5: 611fe881f1a21b65127d54ed1e852035
       size: 32
     - path: artifact/run_id.txt
       hash: md5
-      md5: 5116b3d0af2818bd552a9f2758013020
+      md5: 611fe881f1a21b65127d54ed1e852035
       size: 32

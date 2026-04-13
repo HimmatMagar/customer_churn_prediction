@@ -15,8 +15,8 @@ class ModelBuildingPipeline():
             config = ConfigManager()
             model_config = config.getModelBuildingConfig()
 
-            configure_mlflow(experiment_name="churn-prediction-model")
-            with mlflow.start_run(run_name="svc") as run:
+            configure_mlflow(experiment_name="Churn-SVC")
+            with mlflow.start_run(run_name="churn-svc-model") as run:
                   try:
                         mlflow.log_params({
                               "c": model_config.C,

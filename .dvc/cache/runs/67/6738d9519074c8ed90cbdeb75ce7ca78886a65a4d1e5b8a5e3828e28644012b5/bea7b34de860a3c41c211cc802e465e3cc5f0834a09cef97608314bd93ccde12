@@ -1,0 +1,35 @@
+cmd: python src/churn_prediction/pipeline/data_transform_pipeline.py
+deps:
+- path: artifact/data_ingestion/WA_Fn-UseC_-Telco-Customer-Churn.csv
+  hash: md5
+  md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+  size: 977501
+- path: config/config.yaml
+  hash: md5
+  md5: 1e177b337050321eefedaa04aa3082fc
+  size: 870
+- path: src/churn_prediction/components/data_transform.py
+  hash: md5
+  md5: d641e0eda58b3920d9e72dba3bb87e1c
+  size: 3050
+outs:
+- path: artifact/data_transformation/pipeline.pkl
+  hash: md5
+  md5: 5daadfed6a7d110ec24988734f63f1e3
+  size: 1101
+- path: artifact/data_transformation/xTest.pkl
+  hash: md5
+  md5: a951b242e4bf1449daecba16a8d86846
+  size: 203011
+- path: artifact/data_transformation/xTrain.pkl
+  hash: md5
+  md5: 3f974d851b071da99768cf66abd0b3bd
+  size: 698083
+- path: artifact/data_transformation/yTest.pkl
+  hash: md5
+  md5: dc538b8a0d5e49a35f7b7ab04dd82371
+  size: 17056
+- path: artifact/data_transformation/yTrain.pkl
+  hash: md5
+  md5: 63e59ca4b7d3082f4d17035baa7426ff
+  size: 58312
